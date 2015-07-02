@@ -9,6 +9,6 @@ While this is just kicking off, the thought is to build content around:
   - Deciding between 1st-party and 3rd-party options:
     - [DocumentDB vs 3rd-party document database stores](documentdatabases/docdb-or-3rdparty.md)
   - [Navigating the Hadoop ecosystem](hadoop/hadoop.md)
-  - [SQL Database, SQL Server, and 3rd-party relational database stores](sql/sql-or-3rdparty.md)
+  - [SQL Database, SQL Server, and 3rd-party relational database stores](sql/sqldb-or-3rdparty.md)
 
 
