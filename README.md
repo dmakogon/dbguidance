@@ -7,7 +7,7 @@ While this is just kicking off, the thought is to build content around:
 
   - Navigating the (growing) list of 1st-party Azure database services and related offerings
   - Deciding between 1st-party and 3rd-party options:
-    - [[documentdatabases/docdb-or-3rdparty.md]]
+    - [DocumentDB vs 3rd-party document database engines](documentdatabases/docdb-or-3rdparty.md)
 
 
 
