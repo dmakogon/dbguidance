@@ -28,3 +28,14 @@ Azure offers DocumentDB, a native document database engine as-a-service. The pur
 - **Do you have specific performance targets?** Performance requirements can lead to very specific Virtual Machine specs and Storage specs, to achieve a given performance target (typically using high-performance VMs optimized for attached durable SSD storage). By contrast, DocumentDB manages performance by with selectable (and changeable) performance tiers per partition. From purely a scale perspective, DocumentDB provides a straightforward scale model, which may be controlled either through the portal or programmatically (including command-line script options).
 
    Typically, a VM-based document database node, to handle more transactions, would first be scaled *up* in hardware size and disk performance, with eventual scale *out* when individual node size limits are reached. With DocumentDB, scale *up* is also the first approach, by choosing one of the three available Request Unit (RU) tiers, which range from 250 to 2500 RU/sec. Once this is exceeded, the model is to scale *out* with additional partitions, and then shard data across the partitions. Sharding today is automatically handled in DocumentDB's .NET driver.Document Databases
+   
+###Comparison chart
+
+Feature|DocumentDB|3rd-party
+------:|:---------|:----------
+Management    |Managed service| You manage all setup and upgrades
+Hybrid        |Azure-only     | Azure and on-prem supported
+Existing DB   | Must convert  | Run 3rd-party engine in VM, sync data
+Performance   | RU-based, 2.5K RU / partition | VM perf plus disk perf (up to 50K IOPS)
+Scale-out     | 10GB partitions  | Up to 32TB per VM
+Monitoring    | Built-in        | Some provide monitoring services
