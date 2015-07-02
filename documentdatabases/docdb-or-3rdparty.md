@@ -29,9 +29,8 @@ Azure offers DocumentDB, a native document database engine as-a-service. The pur
 
    Typically, a VM-based document database node, to handle more transactions, would first be scaled *up* in hardware size and disk performance, with eventual scale *out* when individual node size limits are reached. With DocumentDB, scale *up* is also the first approach, by choosing one of the three available Request Unit (RU) tiers, which range from 250 to 2500 RU/sec. Once this is exceeded, the model is to scale *out* with additional partitions, and then shard data across the partitions. Sharding today is automatically handled in DocumentDB's .NET driver.Document Databases
    
-   ###Comparison chart
-   
-   
+###Comparison chart
+
 Feature|DocumentDB|3rd-party
 ------:|:---------|:----------
 Management    |Managed service| You manage all setup and upgrades
