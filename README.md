@@ -8,6 +8,6 @@ While this is just kicking off, the thought is to build content around:
   - Navigating the (growing) list of 1st-party Azure database services and related offerings
   - Deciding between 1st-party and 3rd-party options:
     - [DocumentDB vs 3rd-party document database stores](documentdatabases/docdb-or-3rdparty.md)
-
+  - [Navigating the Hadoop ecosystem](hadoop/hadoop.md)
 
 
