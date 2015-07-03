@@ -7,6 +7,8 @@ Graph Databases
 
 Graph DBs are purpose-built for storing and querying graph-based/network data structures. They are typically not meant to replace your default data store, but to supplement it for queries that are graphical in nature.
 
+This isn't the Excel-like *graph*, but rather networks of connections like Facebook friends or Twitter follow-graphs, but could even be used for mapping out IT server topologies or product purchases.
+
 ###When to consider graph databases?
 
 Some questions to consider before deciding to use a Graph DB:
@@ -19,6 +21,7 @@ Some questions to consider before deciding to use a Graph DB:
 
     Even if you don't need to query using many `JOINs`, your data still might be heavily connected (lots of FKs) and could still benefit from a Graph DB. For instance, even if you can currently get by with querying on a few tables independently, you might benefit from being able to ask graph-related questions.
 
+    For instance, consider a typical online store-front. Any SQL DB would work fine for working with the typical OLTP workload of running the business, but a Graph DB would allow questions like "who buys the same products" or "people who buy X also buy Y" easily.
 
 ###Combining graph databases with other data stores
 
