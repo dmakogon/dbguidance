@@ -24,6 +24,7 @@ While there are no right or wrong answers around this, here are a few popular gr
 
 [OrientDB](http://orientdb.com/orientdb/) is a similar to Neo4j with a free Community edition and a for-pay Enterprise edition. One minor difference is that the free edition is fully Open-Source under the Apache2 license (technically, Neo4j's Community edition is OSS, but under GPL so typically not enterprise-friendly). The Community edition has a free deployment already on [Azure Marketplace](http://azure.microsoft.com/en-us/marketplace/partners/orientdb/orientdb-community-edition-orientdb-community-edition-2-0-10/), so testing it should be easy.
 
+* Supports storage of full "JSON" documents (akin to e.g. Mongo or DocDB).
 * Sharded, multi-master support means support for graphs of much larger size than Neo4j.
 * Query syntax is, literally, SQL.
 	* Minor extensions to the language to support graph concepts.
@@ -44,3 +45,26 @@ While there are no right or wrong answers around this, here are a few popular gr
 	* Blueprints provides a consistent REST API for all supporting DBs.
 	* TinkerPop is not yet widely adopted, so while in theory it provides shelter from vendor lock-in, in practice that guarantee is less secure. Neo4j and OrientDB both claim compliance.
 
+##Picking a Graph Store
+
+There are no hard-and-fast rules to picking one of these over the other, but a few questions you should ask to guide yourself in the right direction.
+
+- **Are you migrating from an existing store? Is it Key/Value or Document-based?**
+
+    If you're migrating from an existing Document-based store, OrientDB has the benefit of allowing you to keep your existing document schema while moving it into the new data store. If you have an existing K/V store, moving to any Graph DB should be possible, or you can consider a hybrid solution as outlined in [the main GraphDB document](graphdb.md).
+
+- **Do you require Enterprise-level support?**
+
+    In this case, you should consider Neo4j or OrientDB, as both have a built-in Enterprise edition and support model. Titan has Enterprise-level support, and that is even stronger now with the purchase by DataStax, but they don't have a focused Enterprise-edition so are lacking Enterprise-level tooling in some areas.
+
+- **Is your data "big data"?**
+
+    Are your graphs Petabytes in size, with hundreds of millions of nodes and edges? If so, you should consider OrientDB or Titan - both of which can scale horizontally, in different ways. 
+
+- **Is your workload write-heavy? Will this be your primary store?**
+
+    If this is the case, OrientDB is a solid choice due to write-ahead logs and ACID support as well as multi-master sharded deployments. 
+
+- **How willing are you to trade performance for fault-tolerance?**
+
+    In some models (batch-loaded, high-read/low-write, BI applications), you might favor a design suited to high performance queries where fault-tolerance is not as important. Titan backed by Berkeley DBs can be a high-performance solution in these cases. However, before optimizing for performance, it makes sense to benchmark on your own scenarios - Neo4j _and_ OrientDB also perform quite well on _big iron_ servers.
