@@ -17,7 +17,10 @@ While this is just kicking off, the thought is to build content around:
   - Deciding between Azure Services and and alternative options:
     - [DocumentDB vs VM-based document database stores and 3rd-party hosters](documentdatabases/docdb-or-3rdparty.md)
     - [Graph database options and 3rd-party hosters](graph/graphdb-options.md)
-  - [Navigating the Hadoop ecosystem](hadoop/hadoop.md)
-  - [SQL Database, SQL Server, and 3rd-party relational database stores](sql/sqldb-or-3rdparty.md)
+    - [SQL Database, SQL Server, and 3rd-party relational database stores](sql/sqldb-or-3rdparty.md)
+  - Ancillary services
+    - [Navigating the Hadoop ecosystem](hadoop/hadoop.md)
+  - Business decisions: Costs and risks
+
 
 
