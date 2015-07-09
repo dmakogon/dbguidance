@@ -1,11 +1,15 @@
 # dbguidance
-Guidance around choosing the right database technologies
+##Guidance around choosing the right database technologies
 
 This guidance is intended to help make decisions about which database engine (or engines) to incorporate into your applications.
 
 While this is just kicking off, the thought is to build content around:
 
-  - Decisions around data store types
+  - Understanding the different data store types
+    - SQL databases
+    - Document databases
+    - Key/value databases
+    - Column databases
     - [Graph databases](graph/graphdb.md)
   - Navigating the (growing) list of 1st-party Azure database services and related offerings
     - [Data stores](azure/datastores.md)
