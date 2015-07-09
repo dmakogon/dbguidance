@@ -7,7 +7,7 @@ While this is just kicking off, the thought is to build content around:
 
   - Understanding the different data store types
     - SQL databases
-    - Document databases
+    - [Document databases](documentdatabases/docdatabaseoverview.md)
     - Key/value databases
     - Column databases
     - [Graph databases](graph/graphdb.md)
