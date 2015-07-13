@@ -24,9 +24,10 @@ As a simple example, consider this comparison between DocumentDB (a document dat
 Feature|DocumentDB|Table Storage
 ------:|:---------|:----------
 Discrete lookups|Any property|Single key
-Queries on value properties| Yes | No (results in partition/table scan)
+Queries on value properties| Yes | Only with defined property types, and results in partition scan or table scan
 Content expiration|Capped collections | Optional, with some cache-oriented stores
 Range quereies| Yes, indexed, or scans collection | Yes, scans partition or entire table
 Complex queries | Yes | No
 Complex object storage | Yes  | No (requires app-level impl)
+Max # of properties | unlimited | 252 plus partitionkey, rowkey, timestamp
 Monitoring    | Built-in        | Some provide monitoring services
