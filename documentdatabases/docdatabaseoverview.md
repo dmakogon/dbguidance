@@ -29,4 +29,3 @@ Range quereies| Yes, with range indexes (otherwise collection-scan) | Yes, scans
 Complex queries | Yes | No
 Complex object storage | Yes  | No (requires app-level impl)
 Max # of properties | unlimited | 252 plus partitionkey, rowkey, timestamp
-Monitoring    | Built-in        | Some provide monitoring services
