@@ -26,7 +26,7 @@ Feature|DocumentDB|Table Storage
 Discrete lookups|Any property|Single key
 Queries on value properties| Yes | Only with defined property types, and results in partition scan or table scan
 Content expiration|Capped collections | Optional, with some cache-oriented stores
-Range quereies| Yes, indexed, or scans collection | Yes, scans partition or entire table
+Range quereies| Yes, with range indexes (otherwise collection-scan) | Yes, scans partition or entire table
 Complex queries | Yes | No
 Complex object storage | Yes  | No (requires app-level impl)
 Max # of properties | unlimited | 252 plus partitionkey, rowkey, timestamp
