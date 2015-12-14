@@ -7,22 +7,19 @@ SQL Guidance
 
 Most but not all SQL Server 2014 Transact-SQL statements are fully supported in Microsoft Azure SQL Database. Additionally, not all the features and tools that exist today for SQL Server box product are fully (or partially supported. For example, if your application requires MSDTC or SQL Agent or SSIS, then SQL Server in Azure VM is the only possible choice. For a comprehensive list of supported TSQL statements, features and tools, see the links below:
 
-  Azure SQL Database Guidelines and Limitations
-  https://msdn.microsoft.com/en-us/library/ff394102.aspx 
+  Azure SQL Database General Limitations and Guidelines
+  https://azure.microsoft.com/en-us/documentation/articles/sql-database-general-limitations 
 
-  Azure SQL Database Tools and Utilities Support
-  https://msdn.microsoft.com/en-us/library/ee621784.aspx 
-
-  Azure SQL Database Transact-SQL Reference
-  https://msdn.microsoft.com/en-us/library/ee336281.aspx
+  Azure SQL Database Transact-SQL information
+  https://azure.microsoft.com/en-us/documentation/articles/sql-database-transact-sql-information
 
 
 **PERFORMANCE: Which is the transaction throughput required by your application?**
 
 Moving a database to the Cloud, does not matter if using PaaS or IaaS, requires careful planning and workload characteristics knowledge to avoid problems. Azure SQLDB provides several levels of Service Level Objectives (SLO), each one with its own assigned resources: 
 
-  Azure SQL Database Service Tiers and Performance Levels
-  https://msdn.microsoft.com/en-us/library/azure/dn741336.aspx  
+  SQL Database options and performance: Understand what's available in each service tier
+  https://azure.microsoft.com/en-us/documentation/articles/sql-database-service-tiers  
 
 If the highest Premium Edition will not be able to satisfy application throughput requirements, SQL Server in Azure VM should be evaluated. Azure provides different sizes and hardware resources for Virtual Machines, then also in this case upper limits should be evaluated to ensure resource requirements will be satisfied:
 
@@ -32,10 +29,10 @@ If the highest Premium Edition will not be able to satisfy application throughpu
 
 **SIZE: Which is the maximum expected size for your database?**
 
-Currently, the maximum database size that you can have in Azure SQLDB is 500GB (Premium SKU). If you require more than that, SQL Server in Azure VM should be evaluated: on G-SERIES SKU you can allocate up to 64TB total disk space (Standard_G5). Extreme caution should be used here: allocating a big database, even if possible from a size perspective, may be not feasible from a performance and transaction throughput perspective, then appropriate tests should be done to ensure CPU, memory and disks will be good enough.
+Currently, the maximum database size that you can have in Azure SQLDB is 1TB (Premium P11 SKU). If you require more than that, SQL Server in Azure VM should be evaluated: on G-SERIES SKU you can allocate up to 64TB total disk space (Standard_G5). Extreme caution should be used here: allocating a big database, even if possible from a size perspective, may be not feasible from a performance and transaction throughput perspective, then appropriate tests should be done to ensure CPU, memory and disks will be good enough.
 
-  Performance Best Practices for SQL Server in Azure Virtual Machines
-  https://msdn.microsoft.com/en-us/library/azure/dn133149.aspx 
+  Performance best practices for SQL Server in Azure Virtual Machines
+  https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-sql-server-performance-best-practices 
 
 
 **WORKLOAD: Is your application workload constant over time?**
@@ -66,19 +63,31 @@ Including proper retry logic and transient fault handling remediation in the cod
 
 If network latency between application and database is critical for the performance, SQL Server in Azure VM should be used: deploying both components in the same Virtual Network and same datacenter will guarantee minimum latency. Additionally, in some extreme situations, it is also possible to install the application on the same SQL Server VM. Azure SQLDB may require additional network hops and proximity is not guaranteed. 
 
+  Azure Network Latency & SQL Server Optimization
+  http://blogs.msdn.com/b/igorpag/archive/2013/12/15/azure-network-latency-test-and-sql-server-optimization.aspx
 
 **SEGREGATION: Your security requirements allow an Internet visible endpoint?**
 
-When creating an Azure SQLDB database, a public URL and IP will be exposed to the Internet, then potentially visible: even if Azure (and Azure SQLDB specifically) provides security mechanisms like firewall rules and DDoS protection, it is not possible to hide this endpoint and prevent Internet visibility. Additionally, Azure SQLDB requires TCP port 1433 for data access and this cannot be changed. On the other hand, SQL Server in Azure VM can be deployed inside a Virtual Network with no Internet endpoint exposed, only applications/services and VMs inside the same VNET will be able to access the database over private (DIP) endpoint. Azure SQLDB cannot be included in Azure Virtual Networks.
+When creating an Azure SQLDB database, a public URL and IP will be exposed to the Internet, then potentially visible: even if Azure (and Azure SQLDB specifically) provides security mechanisms like firewall rules and DDoS protection, it is not possible to hide this endpoint and prevent Internet visibility. Additionally, Azure SQLDB requires TCP port 1433 for data access and this cannot be changed. On the other hand, SQL Server in Azure VM can be deployed inside a Virtual Network with no Internet endpoint exposed, only applications/services and VMs inside the same VNET will be able to access the database over private (DIP) endpoint or using Azure ILB (see below). Azure SQLDB cannot be included (yet) in Azure Virtual Networks.
 
   Azure SQL Database Firewall
   https://msdn.microsoft.com/en-us/library/azure/ee621782.aspx 
+  
+  SQL Server 2014 High-Availability and Multi-Datacenter Disaster Recovery with Multiple Azure ILBs
+  http://blogs.msdn.com/b/igorpag/archive/2014/12/22/sql-2014-high-availability-and-multi-datacenter-disaster-recovery-with-multiple-azure-ilbs.aspx 
 
 
 **VERSIONING & CONTROL: Is your application deeply tight to a specific SQL Server version?**
 
-Azure SQLDB is Microsoft PaaS offering for SQL Server technology, this means that Microsoft takes care of updating and patching of underlying database infrastructure. Azure SQLDB is always and constantly evolving, but you don’t have to schedule service maintenance activities. While Microsoft puts any reasonable commercial effort to guarantee that no breaking changes will be introduced, certification and management requirements may prohibit adoption to a small percentage of customers: if this is the case, and you need full control over SQL Server versioning and updating, you need to use SQL Server in Azure VM approach.
+Azure SQLDB is Microsoft PaaS offering for SQL Server technology, this means that Microsoft takes care of updating and patching of underlying database infrastructure. Azure SQLDB is always and constantly evolving, but you don’t have to schedule service maintenance activities. While Microsoft puts any reasonable commercial effort to guarantee that no breaking changes will be introduced, certification and management requirements may prohibit adoption to a small percentage of customers: if this is the case, and you need full control over SQL Server versioning and updating, you need to use SQL Server in Azure VM approach. Even if you don’t have control over Azure SQLDB versions, you can change the compatibility level of your database and be sure Azure SQLDB will adhere to that specifications:
 
+  ALTER DATABASE Compatibility Level (Transact-SQL)
+  https://msdn.microsoft.com/en-us/library/bb510680.aspx
+
+  Compatibility level 130 for Azure SQL Database V12
+  https://azure.microsoft.com/it-it/updates/compatibility-level-130-for-azure-sql-database-v12
+
+Actually, compatibility level supported in Azure SQLDB V12 are 100 (SQL Server 2008 and SQL Server 2008 R2), 110 (SQL Server 2012), 120 (SQL Server 2014), or 130 (SQL Server 2016 Community Technology Preview 3), that is all the currently supported SQL Server box versions, in addition to SQL Server 2016 CTP3 that is currently in preview.
 
 **TCO: Did you evaluate the full cost of both SQL Server PaaS and IaaS alternatives?**
 
@@ -105,8 +114,8 @@ If your application architecture and requirements ask for a non-trivial number o
 
 SQL Server in Azure VM provide limited scale-up capabilities, essentially dictated by Azure VM SKU and sizes available. Additionally, if your application adopts a tenancy model based on database-level tenant isolation, you may need to create a large number of databases. In addition to administrative problems, application architectural changes must be also considered. If you want to dynamically scale out your database set and at the same time provide minimal impact on your code, you should evaluate Azure SQLDB option and some recent new features introduced "Elastic Database Client library", "Elastic Database Jobs" and "Split-Merge tool".
 
-  Azure SQL Database Elastic Database Tools
-  https://msdn.microsoft.com/en-us/library/azure/dn831885.aspx 
+  Elastic Database features overview
+  https://azure.microsoft.com/en-us/documentation/articles/sql-database-elastic-scale-introduction   
 
 
 **CONFIGURATION: Do you require OS level or SQL Server instance level access?**
@@ -121,6 +130,11 @@ If this is the case, you need to use SQL Server in Azure VM since Azure SQLDB on
   Windows Azure SQL Database SQL Authentication
   http://social.technet.microsoft.com/wiki/contents/articles/2693.windows-azure-sql-database-sql-authentication.aspx 
 
+NOTE: Azure SQLDB supporting Azure Active Directory authentication is currently in preview. Even if able to support “integrated” authentication mechanism, it requires proper infrastructure to be in place and only  supports the .NET Framework Data Provider for SqlServer (at least version .NET Framework 4.6).
+
+  Connecting to SQL Database by Using Azure Active Directory Authentication
+  https://azure.microsoft.com/en-us/documentation/articles/sql-database-aad-authentication
+
 
 **SECURITY: Does your application require fixed IP for database access?**
 
@@ -134,16 +148,17 @@ In some scenarios, especially in hybrid environments where on-premise access is 
 
 By design and default, with no configuration required to activate, Azure SQLDB routinely perform database backup: weekly full, daily differential and 5-minutes transaction log backups. You can trigger restore using Azure Portal or REST API, but you will not have direct physical access to backup files. If your company requires physical access to backup files for compliance, archival or security reasons, you need to use SQL Server in Azure VMs and manually download backup files.
 
-  Azure SQL Database Backup and Restore
-  https://msdn.microsoft.com/en-us/library/azure/jj650016.aspx 
+  Business Continuity Overview
+  https://azure.microsoft.com/en-us/documentation/articles/sql-database-business-continuity
+ 
 
 ##Comparison chart
 
 |       Topic        |     Azure SQLDB (PaaS)      |     SQL Server VM (IaaS)     |
 | :----------------- | :-------------------------: | :--------------------------: |
 | FEATURES           | Less features than box      | Full box product features    |
-| PERFORMANCE        | Max 1000DTU in Premium Tier | Depends on VM SKU/Storage    |
-| DB SIZE            | Max 500GB in Premium Tier   | 64TB on G-SERIES             |
+| PERFORMANCE        | Max 1750DTU in Premium Tier | Depends on VM SKU/Storage    |
+| DB SIZE            | Max 1TB in Premium P11      | 64TB on G-SERIES             |
 | WORKLOAD           | Sizing by average usage     | Sizing based on peaks        |
 | HIGH-AVAILABILITY  | Built-in by platform        | Manual config by AlwaysOn AG |
 | FAULT HANDLING     | Need fault-handling & retry | Optional fault-h. & retry    |
