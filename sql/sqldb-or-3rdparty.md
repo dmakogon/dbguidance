@@ -53,7 +53,7 @@ Azure SQLDB, in its V12 versions, is able to provide 99,99% high-availability SL
 
 **FAULT HANDLING: Your application code include retry logic and transient fault handling?**
 
-Including proper retry logic and transient fault handling remediation in the code should be a universal best practice, both on-premised and in the cloud, either IaaS or PaaS. If this characteristic is missing, application problems may raise on both Azure SQLDB and SQL Server in Azure VM, but in this scenario the latter is recommended over the former.
+Including proper retry logic and transient fault handling remediation in the code should be a universal best practice, both on-premises and in the cloud, either IaaS or PaaS. If this characteristic is missing, application problems may raise on both Azure SQLDB and SQL Server in Azure VM, but in this scenario the latter is recommended over the former.
 
   The Transient Fault Handling Application Block
   https://msdn.microsoft.com/en-us/library/hh680934(v=pandp.50).aspx 
@@ -99,7 +99,7 @@ If one of these options will satisfy all your requirements, which one you should
 
 **ADMINISTRATION: Do you have full-staffed DBA resources?**
 
-SQL Database offers the scale and functionality of an enterprise data center without the administrative overhead that is associated with on-premise or Virtual Machine instances of SQL Server. This self-managing capability will greatly reduce DBA requirements removing the overhead on managing, monitoring and maintaining database infrastructure. SQL Database also manages load balancing and, in case of a server failure, transparent fail-over to a healthy machine hosting one of the backup copies of your database with no human intervention. If you don’t have a DBA, Azure SQLDB should be the preferred choice.
+SQL Database offers the scale and functionality of an enterprise data center without the administrative overhead that is associated with on-premises or Virtual Machine instances of SQL Server. This self-managing capability will greatly reduce DBA requirements removing the overhead on managing, monitoring and maintaining database infrastructure. SQL Database also manages load balancing and, in case of a server failure, transparent fail-over to a healthy machine hosting one of the backup copies of your database with no human intervention. If you don’t have a DBA, Azure SQLDB should be the preferred choice.
 
 
 **MANAGEMENT: How many database entities you will have to manage?**
@@ -138,7 +138,7 @@ NOTE: Azure SQLDB supporting Azure Active Directory authentication is currently 
 
 **SECURITY: Does your application require fixed IP for database access?**
 
-In some scenarios, especially in hybrid environments where on-premise access is required, IP address white-listing is mandatory by local IT and/or Security department to permit outbound connections. Azure SQLDB public IPs can change without notice and cannot be reserved. For this reason, if your company has this security requirement, you need to use SQL Server in Azure VM and configure “Reserved IP” for your Cloud Service. This configuration will also offer the possibility to change the default TCP port for SQL Server connections (1433).
+In some scenarios, especially in hybrid environments where on-premises access is required, IP address white-listing is mandatory by local IT and/or Security department to permit outbound connections. Azure SQLDB public IPs can change without notice and cannot be reserved. For this reason, if your company has this security requirement, you need to use SQL Server in Azure VM and configure “Reserved IP” for your Cloud Service. This configuration will also offer the possibility to change the default TCP port for SQL Server connections (1433).
 
   Reserved IP addresses for Cloud Services & Virtual Machines
   http://azure.microsoft.com/blog/2014/05/14/reserved-ip-addresses 
@@ -150,28 +150,50 @@ By design and default, with no configuration required to activate, Azure SQLDB r
 
   Business Continuity Overview
   https://azure.microsoft.com/en-us/documentation/articles/sql-database-business-continuity
+
+Another point to consider is the retention period of saved backups: in Azure SQLDB, at the moment, automatic backups created by the infrastructure have a maximum retention period of 35 days for Point-in-Time-Restore (PITR). If you need a longer period, you should use SQL Server installed in Azure Virtual Machines.
+
+
+**HYBRID: You need to integrate with on-premises AlwaysOn Availability Group (AG) topology?**
+
+If you have existing SQL Server on-premises installation using AlwaysOn Availability Groups (AG) feature for high-availability and cross-datacenter disaster-recovery, a SQL Server instance installed inside Azure Virtual Machines can join this existing topology as an additional replica. This is not possible for Azure SQLDB. Additionally, if you want to use SQL Server “Log Shipping” DR feature, same restrictions apply.
+
+  High Availability and Disaster Recovery for SQL Server in Azure Virtual Machines
+  https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-sql-server-high-availability-and-disaster-recovery-solutions
+
+NOTE: Although Azure SQLDB can participate as a “Subscriber”, in a “Transactional Replication” topology with on-premises SQL Server instances or Virtual Machines in the Cloud, this is not considered HA/DR mechanism.
  
+  Transactional Replication to Azure SQL DB now in public preview
+  https://azure.microsoft.com/it-it/blog/transactional-replication-to-azure-sql-db 
+
+**CROSS-DB ACCESS: You need to access multiple databases at the same time?**
+
+In Azure SQLDB, currently is not possible to change database context once the connection is established, USE statement is not allowed to point to another database in the same connection. It is also not possible to create “Linked Servers” pointing to other Azure SQLDB databases nor using 4-parts name syntax to point external DBs. Finally, distributed transactions using Distributed Transaction Coordinator (DTC) for 2-phase commit protocol is now allowed.
+
 
 ##Comparison chart
 
-|       Topic        |     Azure SQLDB (PaaS)      |     SQL Server VM (IaaS)     |
-| :----------------- | :-------------------------: | :--------------------------: |
-| FEATURES           | Less features than box      | Full box product features    |
-| PERFORMANCE        | Max 1750DTU in Premium Tier | Depends on VM SKU/Storage    |
-| DB SIZE            | Max 1TB in Premium P11      | 64TB on G-SERIES             |
-| WORKLOAD           | Sizing by average usage     | Sizing based on peaks        |
-| HIGH-AVAILABILITY  | Built-in by platform        | Manual config by AlwaysOn AG |
-| FAULT HANDLING     | Need fault-handling & retry | Optional fault-h. & retry    |
-| LOCALITY           | No co-location with App     | Co-located by VMs and VNETs  |
-| SEGREGATION        | Internet exposed endpoint   | Internal private endpoint    |
-| VERSIONING         | No control on upgrades      | Full control over DB upgrade |
-| TCO                | Very low, self-managed      | High (as on-premise)         |
-| ADMINISTRATION     | No full DBA required        | Full staffed DBA required    |
-| MANAGEMENT         | Easy to manage many DBs     | Complex to manage many DBs   |
-| SCALE OUT          | Tools& Frameworks available | No easy scale-out            |
-| CONFIGURATION      | No setup customization      | Full access to OS and SQL    |
-| AUTHENTICATION     | Only SQL standard auth.     | SQL standard and integrated  |
-| SECURITY           | No Fixed IP available       | Fixed IP possible by VM      |
-| BACKUP             | Backup files not accessible | Full control of backup files |
+|       Topic        |          Azure SQLDB (PaaS)             |           SQL Server VM (IaaS)               |
+| :----------------- | :-------------------------------------: | :------------------------------------------: |
+| FEATURES           | Less features than box                  | Full box product features                    |
+| PERFORMANCE        | Max 1750DTU in Premium Tier             | Depends on VM SKU/Storage                    |
+| DB SIZE            | Max 1TB in Premium P11                  | 64TB on G-SERIES                             |
+| WORKLOAD           | Sizing by average usage                 | Sizing based on peaks                        |
+| HIGH-AVAILABILITY  | Built-in by platform                    | Manual config by AlwaysOn AG                 |
+| FAULT HANDLING     | Need fault-handling & retry             | Optional fault-h. & retry                    |
+| LOCALITY           | No co-location with App                 | Co-located by VMs and VNETs                  |
+| SEGREGATION        | Internet exposed endpoint               | Internal private endpoint                    |
+| VERSIONING         | No control on upgrades                  | Full control over DB upgrade                 |
+| TCO                | Very low, self-managed                  | High (as on-premises)                        |
+| ADMINISTRATION     | No full DBA required                    | Full staffed DBA required                    |
+| MANAGEMENT         | Easy to manage many DBs                 | Complex to manage many DBs                   |
+| SCALE OUT          | Tools& Frameworks available             | No easy scale-out                            |
+| CONFIGURATION      | No setup customization                  | Full access to OS and SQL                    |
+| AUTHENTICATION     | Only SQL standard auth.                 | SQL standard and integrated                  |
+| SECURITY           | No Fixed IP fixed 1433 port             | Fixed IP, port can be change                 |
+| BACKUP             | Files not accessible, 35 days PITR      | Full control of backup files, unlimited PITR |
+| HYBRID             | No AlwaysOn AG support                  | Can join on-premises AlwaysOn AG topology    |
+| CROSS-DB ACCESS    | NO: DTC, Linked Srv, USE, 4-parts names | YES: DTC, Linked Srv, USE, 4-parts names     |
+
 
 
