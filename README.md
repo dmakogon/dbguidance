@@ -21,6 +21,7 @@ While this is just kicking off, the thought is to build content around:
   - Ancillary services
     - [Navigating the Hadoop ecosystem](hadoop/hadoop.md)
   - Business decisions: Costs and risks
+  - [Polyglot persistence: Working with multiple databases](polyglot/polyglot.md)
 
 
 
