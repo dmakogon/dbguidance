@@ -7,4 +7,4 @@ data modeling, normal forms, etc. Not so much around other database types.
 While there's no "right" way to model data, there are definitely things to
 think about.
 
-[Modeling data in a document database](modeling/docdb.md)
+[Modeling data in a document database](./docdb.md)
